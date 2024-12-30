@@ -1,0 +1,59 @@
+.pfm-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.pfm-form-group {
+    margin-bottom: 15px;
+}
+
+.pfm-form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.pfm-form-group input,
+.pfm-form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.pfm-button {
+    background-color: #0073aa;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pfm-button:hover {
+    background-color: #005177;
+}
+
+#pfm-dashboard,
+#pfm-reports,
+#pfm-settings {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+#pfm-income-chart,
+#pfm-expense-chart {
+    width: 48%;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+#pfm-summary {
+    clear: both;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
