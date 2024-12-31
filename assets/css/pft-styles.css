@@ -1,124 +1,140 @@
-jQuery(document).ready(function($) {
-    var ctx = document.getElementById('pft-monthly-chart').getContext('2d');
-    var chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'Income',
-                backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                data: []
-            }, {
-                label: 'Expenses',
-                backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                data: []
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+#pft-finance-tracker {
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-    function updateChart() {
-        $.ajax({
-            url: pftAjax.ajaxurl,
-            type: 'POST',
-            data: {
-                action: 'pft_get_monthly_data',
-                nonce: pftAjax.nonce
-            },
-            success: function(response) {
-                if (response.success) {
-                    chart.data.labels = response.data.labels;
-                    chart.data.datasets[0].data = response.data.income;
-                    chart.data.datasets[1].data = response.data.expenses;
-                    chart.update();
-                } else {
-                    console.error('Error fetching chart data:', response.data.message);
-                }
-            }
-        });
+.pft-form-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+#pft-transaction-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#pft-transaction-form input,
+#pft-transaction-form select,
+#pft-transaction-form button {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+#pft-transaction-form input[type="text"],
+#pft-transaction-form input[type="number"],
+#pft-transaction-form input[type="date"],
+#pft-transaction-form select {
+    flex: 1;
+    min-width: 120px;
+}
+
+#pft-transaction-form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+#pft-transaction-form button:hover {
+    background-color: #45a049;
+}
+
+.pft-summary {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.pft-summary div {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 5px;
+    flex: 1;
+    min-width: 150px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.pft-chart-container {
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.pft-transactions-list {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.pft-transactions-list h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+#pft-transactions {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#pft-transactions li {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#pft-transactions li:last-child {
+    border-bottom: none;
+}
+
+.pft-income {
+    color: #4CAF50;
+}
+
+.pft-expense {
+    color: #f44336;
+}
+
+@media (max-width: 600px) {
+    #pft-transaction-form {
+        flex-direction: column;
     }
 
-    function updateTransactionsList() {
-        $.ajax({
-            url: pftAjax.ajaxurl,
-            type: 'POST',
-            data: {
-                action: 'pft_get_recent_transactions',
-                nonce: pftAjax.nonce
-            },
-            success: function(response) {
-                if (response.success) {
-                    $('#pft-transactions').html(response.data);
-                } else {
-                    console.error('Error fetching transactions:', response.data.message);
-                }
-            }
-        });
+    #pft-transaction-form input,
+    #pft-transaction-form select,
+    #pft-transaction-form button {
+        width: 100%;
     }
 
-    function updateSummary() {
-        $.ajax({
-            url: pftAjax.ajaxurl,
-            type: 'POST',
-            data: {
-                action: 'pft_get_summary',
-                nonce: pftAjax.nonce
-            },
-            success: function(response) {
-                if (response.success) {
-                    $('#pft-total-income').text('Total Income: ' + response.data.income);
-                    $('#pft-total-expenses').text('Total Expenses: ' + response.data.expenses);
-                    $('#pft-balance').text('Balance: ' + response.data.balance);
-                } else {
-                    console.error('Error fetching summary:', response.data.message);
-                }
-            }
-        });
+    .pft-summary {
+        flex-direction: column;
     }
 
-    $('#pft-transaction-form').submit(function(e) {
-        e.preventDefault();
-        $.ajax({
-            url: pftAjax.ajaxurl,
-            type: 'POST',
-            data: {
-                action: 'pft_add_transaction',
-                nonce: pftAjax.nonce,
-                description: $('#pft-description').val(),
-                amount: $('#pft-amount').val(),
-                type: $('#pft-type').val(),
-                date: $('#pft-date').val()
-            },
-            success: function(response) {
-                if (response.success) {
-                    $('#pft-transaction-form')[0].reset();
-                    updateChart();
-                    updateTransactionsList();
-                    updateSummary();
-                } else {
-                    alert('Error adding transaction: ' + response.data.message);
-                }
-            }
-        });
-    });
-
-    // Initialize the dashboard
-    updateChart();
-    updateTransactionsList();
-    updateSummary();
-
-    // Refresh data every 5 minutes
-    setInterval(function() {
-        updateChart();
-        updateTransactionsList();
-        updateSummary();
-    }, 300000);
-});
-
+    .pft-summary div {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
