@@ -3,7 +3,7 @@
  * Plugin Name: Personal Finance Tracker
  * Description: Advanced personal finance tracking with beautiful reports
  * Version: 1.0
- * Author: Rashed Hossain
+ * Author: Your Name
  */
 
 if (!defined('ABSPATH')) {
@@ -19,12 +19,14 @@ define('PFT_PLUGIN_URL', plugin_dir_url(__FILE__));
 require_once PFT_PLUGIN_DIR . 'includes/class-pft-post-types.php';
 require_once PFT_PLUGIN_DIR . 'includes/class-pft-shortcodes.php';
 require_once PFT_PLUGIN_DIR . 'admin/class-pft-admin.php';
+require_once PFT_PLUGIN_DIR . 'includes/class-pft-ajax-handlers.php';
 
 // Initialize the plugin
 function pft_init() {
     new PFT_Post_Types();
     new PFT_Shortcodes();
     new PFT_Admin();
+    new PFT_Ajax_Handlers();
 }
 add_action('plugins_loaded', 'pft_init');
 
@@ -33,6 +35,9 @@ function pft_enqueue_scripts() {
     wp_enqueue_style('pft-styles', PFT_PLUGIN_URL . 'assets/css/pft-styles.css', array(), PFT_VERSION);
     wp_enqueue_script('chart-js', 'https://cdn.jsdelivr.net/npm/chart.js', array(), '3.7.1', true);
     wp_enqueue_script('pft-scripts', PFT_PLUGIN_URL . 'assets/js/pft-scripts.js', array('jquery', 'chart-js'), PFT_VERSION, true);
-    wp_localize_script('pft-scripts', 'pftAjax', array('ajaxurl' => admin_url('admin-ajax.php')));
+    wp_localize_script('pft-scripts', 'pftAjax', array(
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('pft_ajax_nonce')
+    ));
 }
 add_action('wp_enqueue_scripts', 'pft_enqueue_scripts');
