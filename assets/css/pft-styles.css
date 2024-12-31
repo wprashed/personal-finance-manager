@@ -8,7 +8,8 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.pft-form-container {
+.pft-monthly-summary,
+.pft-monthly-details {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 5px;
@@ -16,125 +17,72 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-#pft-transaction-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+#pft-monthly-chart-container {
+    height: 300px;
 }
 
-#pft-transaction-form input,
-#pft-transaction-form select,
-#pft-transaction-form button {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    font-size: 14px;
-}
-
-#pft-transaction-form input[type="text"],
-#pft-transaction-form input[type="number"],
-#pft-transaction-form input[type="date"],
-#pft-transaction-form select {
-    flex: 1;
-    min-width: 120px;
-}
-
-#pft-transaction-form button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    padding: 10px 20px;
-    font-weight: bold;
-}
-
-#pft-transaction-form button:hover {
-    background-color: #45a049;
-}
-
-.pft-summary {
-    display: flex;
-    justify-content: space-between;
+.pft-monthly-income,
+.pft-monthly-expenses {
     margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 10px;
 }
 
-.pft-summary div {
-    background-color: #ffffff;
-    padding: 15px;
-    border-radius: 5px;
-    flex: 1;
-    min-width: 150px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.pft-chart-container {
-    margin-bottom: 20px;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.pft-transactions-list {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.pft-transactions-list h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
+.pft-monthly-income h5,
+.pft-monthly-expenses h5 {
+    margin-bottom: 10px;
     color: #333;
+    font-size: 18px;
 }
 
-#pft-transactions {
+.pft-monthly-income ul,
+.pft-monthly-expenses ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-#pft-transactions li {
+.pft-monthly-income li,
+.pft-monthly-expenses li {
+    padding: 8px 0;
     border-bottom: 1px solid #eee;
-    padding: 10px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-#pft-transactions li:last-child {
+.pft-monthly-income li:last-child,
+.pft-monthly-expenses li:last-child {
     border-bottom: none;
 }
 
-.pft-income {
+.pft-amount {
+    font-weight: bold;
+}
+
+.pft-income-amount {
     color: #4CAF50;
 }
 
-.pft-expense {
+.pft-expense-amount {
     color: #f44336;
 }
 
 @media (max-width: 600px) {
-    #pft-transaction-form {
+    #pft-finance-tracker {
+        padding: 10px;
+    }
+
+    .pft-monthly-summary,
+    .pft-monthly-details {
+        padding: 15px;
+    }
+
+    .pft-monthly-income li,
+    .pft-monthly-expenses li {
         flex-direction: column;
+        align-items: flex-start;
     }
 
-    #pft-transaction-form input,
-    #pft-transaction-form select,
-    #pft-transaction-form button {
-        width: 100%;
-    }
-
-    .pft-summary {
-        flex-direction: column;
-    }
-
-    .pft-summary div {
-        width: 100%;
-        margin-bottom: 10px;
+    .pft-amount {
+        margin-top: 5px;
     }
 }
