@@ -10,6 +10,7 @@ class PFT_Post_Types {
             'label'  => 'Transactions',
             'supports' => array('title', 'custom-fields'),
             'menu_icon' => 'dashicons-money-alt',
+            'show_in_rest' => true,
         );
         register_post_type('pft_transaction', $args);
     }
