@@ -20,6 +20,7 @@ require_once PFT_PLUGIN_DIR . 'includes/class-pft-post-types.php';
 require_once PFT_PLUGIN_DIR . 'includes/class-pft-shortcodes.php';
 require_once PFT_PLUGIN_DIR . 'admin/class-pft-admin.php';
 require_once PFT_PLUGIN_DIR . 'includes/class-pft-ajax-handlers.php';
+require_once PFT_PLUGIN_DIR . 'includes/class-pft-admin-dashboard.php';
 
 // Initialize the plugin
 function pft_init() {
@@ -27,6 +28,7 @@ function pft_init() {
     new PFT_Shortcodes();
     new PFT_Admin();
     new PFT_Ajax_Handlers();
+    new PFT_Admin_Dashboard();
 }
 add_action('plugins_loaded', 'pft_init');
 
