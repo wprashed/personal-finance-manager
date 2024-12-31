@@ -3,7 +3,7 @@
  * Plugin Name: Personal Finance Tracker
  * Description: Advanced personal finance tracking with beautiful reports
  * Version: 1.0
- * Author: Your Name
+ * Author: Rashed Hossain
  */
 
 if (!defined('ABSPATH')) {
