@@ -233,3 +233,6 @@
         grid-template-columns: 1fr;
     }
 }
+.pft-entry, #pft_monthly_finance_meta{
+    display: none;
+}
