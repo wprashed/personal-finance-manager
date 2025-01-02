@@ -85,7 +85,7 @@ jQuery(document).ready(function($) {
         var template = `
             <div class="pft-transaction-row" style="display: none;">
                 <select name="pft_${type}[${index}][type]" required>
-                    <option value="">Select Category</option>
+                    <option value="">Select Type</option>
                     ${$('#pft-transaction-types-template').html()}
                 </select>
                 <input type="text" 
@@ -123,7 +123,7 @@ jQuery(document).ready(function($) {
         $('#pft-expense-entries input[name*="[amount]"]').each(function() {
             var amount = parseFloat($(this).val()) || 0;
             if (!isNaN(amount)) {
-                totalExpenses += amount;
+                totalExpenses +=totalExpenses += amount;
             }
         });
 
@@ -144,7 +144,73 @@ jQuery(document).ready(function($) {
         }));
     }
 
+    $('#pft-filter-form').on('submit', function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+        formData += '&action=pft_get_filtered_data';
+        formData += '&nonce=' + pftEditor.nonce;
+
+        $.ajax({
+            url: pftEditor.ajaxurl,
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                if (response.success) {
+                    updateFilteredData(response.data);
+                } else {
+                    alert('Error: ' + response.data);
+                }
+            },
+            error: function() {
+                alert('An error occurred while fetching data.');
+            }
+        });
+    });
+
+    function updateFilteredData(data) {
+        var $container = $('.pft-filtered-data');
+        if ($container.length === 0) {
+            $container = $('<div class="pft-filtered-data"></div>');
+            $('.pft-filter-section').after($container);
+        }
+        $container.empty();
+
+        if (data.length === 0) {
+            $container.append('<p>No data found for the selected filters.</p>');
+            return;
+        }
+
+        var $table = $('<table class="pft-filtered-table"></table>');
+        $table.append('<thead><tr><th>Type</th><th>Description</th><th>Amount</th><th>Type</th></tr></thead>');
+        var $tbody = $('<tbody></tbody>');
+
+        data.forEach(function(item) {
+            var $row = $('<tr></tr>');
+            $row.append('<td>' + escapeHtml(item.Type) + '</td>');
+            $row.append('<td>' + escapeHtml(item.description) + '</td>');
+            $row.append('<td>$' + parseFloat(item.amount).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + '</td>');
+            $row.append('<td>' + escapeHtml(item.type) + '</td>');
+            $tbody.append($row);
+        });
+
+        $table.append($tbody);
+        $container.append($table);
+    }
+
+    function escapeHtml(unsafe) {
+        return unsafe
+             .replace(/&/g, "&amp;")
+             .replace(/</g, "&lt;")
+             .replace(/>/g, "&gt;")
+             .replace(/"/g, "&quot;")
+             .replace(/'/g, "&#039;");
+    }
+
     // Initial updates
     updateTotals();
     updateChart();
 });
+
