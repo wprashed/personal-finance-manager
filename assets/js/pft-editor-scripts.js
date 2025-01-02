@@ -85,7 +85,7 @@ jQuery(document).ready(function($) {
         var template = `
             <div class="pft-transaction-row" style="display: none;">
                 <select name="pft_${type}[${index}][type]" required>
-                    <option value="">Select Category</option>
+                    <option value="">Select Type</option>
                     ${$('#pft-transaction-types-template').html()}
                 </select>
                 <input type="text" 
@@ -181,12 +181,12 @@ jQuery(document).ready(function($) {
         }
 
         var $table = $('<table class="pft-filtered-table"></table>');
-        $table.append('<thead><tr><th>Category</th><th>Description</th><th>Amount</th><th>Type</th></tr></thead>');
+        $table.append('<thead><tr><th>Type</th><th>Description</th><th>Amount</th><th>Type</th></tr></thead>');
         var $tbody = $('<tbody></tbody>');
 
         data.forEach(function(item) {
             var $row = $('<tr></tr>');
-            $row.append('<td>' + escapeHtml(item.category) + '</td>');
+            $row.append('<td>' + escapeHtml(item.Type) + '</td>');
             $row.append('<td>' + escapeHtml(item.description) + '</td>');
             $row.append('<td>$' + parseFloat(item.amount).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
