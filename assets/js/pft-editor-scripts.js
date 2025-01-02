@@ -186,18 +186,27 @@ jQuery(document).ready(function($) {
 
         data.forEach(function(item) {
             var $row = $('<tr></tr>');
-            $row.append('<td>' + item.category + '</td>');
-            $row.append('<td>' + item.description + '</td>');
+            $row.append('<td>' + escapeHtml(item.category) + '</td>');
+            $row.append('<td>' + escapeHtml(item.description) + '</td>');
             $row.append('<td>$' + parseFloat(item.amount).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             }) + '</td>');
-            $row.append('<td>' + item.type + '</td>');
+            $row.append('<td>' + escapeHtml(item.type) + '</td>');
             $tbody.append($row);
         });
 
         $table.append($tbody);
         $container.append($table);
+    }
+
+    function escapeHtml(unsafe) {
+        return unsafe
+             .replace(/&/g, "&amp;")
+             .replace(/</g, "&lt;")
+             .replace(/>/g, "&gt;")
+             .replace(/"/g, "&quot;")
+             .replace(/'/g, "&#039;");
     }
 
     // Initial updates
