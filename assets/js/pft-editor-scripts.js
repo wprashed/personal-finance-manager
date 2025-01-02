@@ -1,22 +1,21 @@
 jQuery(document).ready(function($) {
-    // Initialize the monthly chart
     var ctx = document.getElementById('pftMonthlyChart').getContext('2d');
     var monthlyChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: [],
+            labels: ['Income', 'Expenses'],
             datasets: [{
-                label: 'Income',
-                backgroundColor: 'rgba(16, 185, 129, 0.7)',
-                borderColor: 'rgb(16, 185, 129)',
-                borderWidth: 1,
-                data: []
-            }, {
-                label: 'Expenses',
-                backgroundColor: 'rgba(239, 68, 68, 0.7)',
-                borderColor: 'rgb(239, 68, 68)',
-                borderWidth: 1,
-                data: []
+                label: 'Amount',
+                data: [0, 0],
+                backgroundColor: [
+                    'rgba(16, 185, 129, 0.7)',
+                    'rgba(239, 68, 68, 0.7)'
+                ],
+                borderColor: [
+                    'rgb(16, 185, 129)',
+                    'rgb(239, 68, 68)'
+                ],
+                borderWidth: 1
             }]
         },
         options: {
@@ -44,29 +43,41 @@ jQuery(document).ready(function($) {
         }
     });
 
-    // Handle adding new income entries
+    function updateChart() {
+        var totalIncome = 0;
+        var totalExpenses = 0;
+
+        $('#pft-income-entries input[name*="[amount]"]').each(function() {
+            totalIncome += parseFloat($(this).val()) || 0;
+        });
+
+        $('#pft-expense-entries input[name*="[amount]"]').each(function() {
+            totalExpenses += parseFloat($(this).val()) || 0;
+        });
+
+        monthlyChart.data.datasets[0].data = [totalIncome, totalExpenses];
+        monthlyChart.update();
+    }
+
     $('#pft-add-income').on('click', function() {
-        var container = $('#pft-income-entries');
-        addTransactionRow(container, 'income');
+        addTransactionRow($('#pft-income-entries'), 'income');
     });
 
-    // Handle adding new expense entries
     $('#pft-add-expense').on('click', function() {
-        var container = $('#pft-expense-entries');
-        addTransactionRow(container, 'expense');
+        addTransactionRow($('#pft-expense-entries'), 'expense');
     });
 
-    // Handle removing entries
     $(document).on('click', '.pft-remove-button', function() {
         $(this).closest('.pft-transaction-row').slideUp(200, function() {
             $(this).remove();
             updateTotals();
+            updateChart();
         });
     });
 
-    // Handle amount changes
     $(document).on('input', 'input[name*="[amount]"]', function() {
         updateTotals();
+        updateChart();
     });
 
     function addTransactionRow(container, type) {
@@ -74,7 +85,7 @@ jQuery(document).ready(function($) {
         var template = `
             <div class="pft-transaction-row" style="display: none;">
                 <select name="pft_${type}[${index}][type]" required>
-                    <option value="">Select Type</option>
+                    <option value="">Select Category</option>
                     ${$('#pft-transaction-types-template').html()}
                 </select>
                 <input type="text" 
@@ -112,7 +123,7 @@ jQuery(document).ready(function($) {
         $('#pft-expense-entries input[name*="[amount]"]').each(function() {
             var amount = parseFloat($(this).val()) || 0;
             if (!isNaN(amount)) {
-                totalExpenses += amount;
+                totalExpenses +=totalExpenses += amount;
             }
         });
 
@@ -131,43 +142,66 @@ jQuery(document).ready(function($) {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         }));
-
-        // Update chart data
-        monthlyChart.data.datasets[0].data = [totalIncome];
-        monthlyChart.data.datasets[1].data = [totalExpenses];
-        monthlyChart.update();
     }
 
-    // Add event listeners for real-time updates
-    $(document).on('input', 'input[name*="[amount]"]', updateTotals);
-    $(document).on('change', 'select[name*="[type]"]', updateTotals);
+    $('#pft-filter-form').on('submit', function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+        formData += '&action=pft_get_filtered_data';
+        formData += '&nonce=' + pftEditor.nonce;
 
-    // Initialize tooltips
-    $('[data-tooltip]').tooltip();
-
-    // Fetch and update chart data
-    function updateChart() {
         $.ajax({
             url: pftEditor.ajaxurl,
             type: 'POST',
-            data: {
-                action: 'pft_get_monthly_chart_data',
-                nonce: pftEditor.nonce,
-                post_id: pftEditor.post_id
-            },
+            data: formData,
             success: function(response) {
                 if (response.success) {
-                    monthlyChart.data.labels = response.data.labels;
-                    monthlyChart.data.datasets[0].data = response.data.income;
-                    monthlyChart.data.datasets[1].data = response.data.expenses;
-                    monthlyChart.update();
+                    updateFilteredData(response.data);
+                } else {
+                    alert('Error: ' + response.data);
                 }
+            },
+            error: function() {
+                alert('An error occurred while fetching data.');
             }
         });
+    });
+
+    function updateFilteredData(data) {
+        var $container = $('.pft-filtered-data');
+        if ($container.length === 0) {
+            $container = $('<div class="pft-filtered-data"></div>');
+            $('.pft-filter-section').after($container);
+        }
+        $container.empty();
+
+        if (data.length === 0) {
+            $container.append('<p>No data found for the selected filters.</p>');
+            return;
+        }
+
+        var $table = $('<table class="pft-filtered-table"></table>');
+        $table.append('<thead><tr><th>Category</th><th>Description</th><th>Amount</th><th>Type</th></tr></thead>');
+        var $tbody = $('<tbody></tbody>');
+
+        data.forEach(function(item) {
+            var $row = $('<tr></tr>');
+            $row.append('<td>' + item.category + '</td>');
+            $row.append('<td>' + item.description + '</td>');
+            $row.append('<td>$' + parseFloat(item.amount).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + '</td>');
+            $row.append('<td>' + item.type + '</td>');
+            $tbody.append($row);
+        });
+
+        $table.append($tbody);
+        $container.append($table);
     }
 
-    // Initial chart update
+    // Initial updates
+    updateTotals();
     updateChart();
-    updateTotals(); // Initial update
 });
 
