@@ -96,7 +96,7 @@ class PFT_Post_Editor {
                     <div class="pft-filter-group">
                         <label for="pft-filter-category">Category</label>
                         <select id="pft-filter-category" name="category" class="pft-select">
-                            <option value="all">All Categories</option>
+                            <option value="all">All Types</option>
                             <option value="income">Income</option>
                             <option value="expense">Expense</option>
                         </select>
@@ -180,12 +180,12 @@ class PFT_Post_Editor {
                 'hide_empty' => false
             ));
             ?>
-            <optgroup label="Income Categories">
+            <optgroup label="Income Types">
                 <?php foreach ($income_types as $type): ?>
                     <option value="income_<?php echo esc_attr($type->term_id); ?>"><?php echo esc_html($type->name); ?></option>
                 <?php endforeach; ?>
             </optgroup>
-            <optgroup label="Expense Categories">
+            <optgroup label="Expense Types">
                 <?php foreach ($expense_types as $type): ?>
                     <option value="expense_<?php echo esc_attr($type->term_id); ?>"><?php echo esc_html($type->name); ?></option>
                 <?php endforeach; ?>
@@ -202,12 +202,12 @@ class PFT_Post_Editor {
             <select name="pft_<?php echo $type; ?>[<?php echo $index; ?>][type]" required>
                 <option value="">Select Category</option>
                 <?php
-                $categories = get_terms(array(
+                $Types = get_terms(array(
                     'taxonomy' => $category_taxonomy,
                     'hide_empty' => false
                 ));
-                if (!is_wp_error($categories) && !empty($categories)) {
-                    foreach ($categories as $category) {
+                if (!is_wp_error($Types) && !empty($Types)) {
+                    foreach ($Types as $category) {
                         $selected = selected($entry['type'], $category->term_id, false);
                         echo '<option value="' . esc_attr($category->term_id) . '" ' . $selected . '>' . 
                              esc_html($category->name) . '</option>';
