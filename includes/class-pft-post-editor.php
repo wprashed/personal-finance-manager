@@ -4,6 +4,7 @@ class PFT_Post_Editor {
         add_action('add_meta_boxes', array($this, 'add_finance_meta_boxes'));
         add_action('save_post', array($this, 'save_finance_meta'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_editor_scripts'));
+        add_action('wp_ajax_pft_get_filtered_data', array($this, 'get_filtered_data'));
     }
 
     public function enqueue_editor_scripts($hook) {
@@ -44,17 +45,8 @@ class PFT_Post_Editor {
         $income_data = get_post_meta($post->ID, '_pft_income_data', true) ?: array();
         $expense_data = get_post_meta($post->ID, '_pft_expense_data', true) ?: array();
         
-        $total_income = 0;
-        $total_expenses = 0;
-        
-        foreach ($income_data as $entry) {
-            $total_income += floatval($entry['amount']);
-        }
-        
-        foreach ($expense_data as $entry) {
-            $total_expenses += floatval($entry['amount']);
-        }
-        
+        $total_income = array_sum(array_column($income_data, 'amount'));
+        $total_expenses = array_sum(array_column($expense_data, 'amount'));
         $balance = $total_income - $total_expenses;
         ?>
         <div class="pft-editor-wrap">
@@ -96,6 +88,25 @@ class PFT_Post_Editor {
                 <div class="pft-chart-container">
                     <canvas id="pftMonthlyChart"></canvas>
                 </div>
+            </div>
+
+            <div class="pft-filter-section">
+                <h3 class="pft-section-title">Filter Report</h3>
+                <form id="pft-filter-form" class="pft-filter-form">
+                    <div>
+                        <label for="pft-filter-category">Category</label>
+                        <select id="pft-filter-category" name="category">
+                            <option value="all">All Categories</option>
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="pft-filter-month">Month</label>
+                        <input type="month" id="pft-filter-month" name="month" value="<?php echo date('Y-m'); ?>">
+                    </div>
+                    <button type="submit" class="pft-filter-button">Apply Filter</button>
+                </form>
             </div>
 
             <div class="pft-transactions-section">
@@ -154,33 +165,45 @@ class PFT_Post_Editor {
         <!-- Template for transaction types -->
         <script type="text/template" id="pft-transaction-types-template">
             <?php
-            $types = get_terms(array(
-                'taxonomy' => 'pft_transaction_type',
+            $income_types = get_terms(array(
+                'taxonomy' => 'pft_income_category',
                 'hide_empty' => false
             ));
-            foreach ($types as $type) {
-                echo '<option value="' . esc_attr($type->term_id) . '">' . esc_html($type->name) . '</option>';
-            }
+            $expense_types = get_terms(array(
+                'taxonomy' => 'pft_expense_category',
+                'hide_empty' => false
+            ));
             ?>
+            <optgroup label="Income Categories">
+                <?php foreach ($income_types as $type): ?>
+                    <option value="income_<?php echo esc_attr($type->term_id); ?>"><?php echo esc_html($type->name); ?></option>
+                <?php endforeach; ?>
+            </optgroup>
+            <optgroup label="Expense Categories">
+                <?php foreach ($expense_types as $type): ?>
+                    <option value="expense_<?php echo esc_attr($type->term_id); ?>"><?php echo esc_html($type->name); ?></option>
+                <?php endforeach; ?>
+            </optgroup>
         </script>
         <?php
     }
 
     private function render_transaction_row($type, $index, $entry = null) {
         $entry = $entry ?: array('type' => '', 'description' => '', 'amount' => '');
+        $category_taxonomy = $type === 'income' ? 'pft_income_category' : 'pft_expense_category';
         ?>
         <div class="pft-transaction-row">
             <select name="pft_<?php echo $type; ?>[<?php echo $index; ?>][type]" required>
-                <option value="">Select Type</option>
+                <option value="">Select Category</option>
                 <?php
-                $types = get_terms(array(
-                    'taxonomy' => 'pft_transaction_type',
+                $categories = get_terms(array(
+                    'taxonomy' => $category_taxonomy,
                     'hide_empty' => false
                 ));
-                foreach ($types as $term) {
-                    $selected = selected($entry['type'], $term->term_id, false);
-                    echo '<option value="' . esc_attr($term->term_id) . '" ' . $selected . '>' . 
-                         esc_html($term->name) . '</option>';
+                foreach ($categories as $category) {
+                    $selected = selected($entry['type'], $category->term_id, false);
+                    echo '<option value="' . esc_attr($category->term_id) . '" ' . $selected . '>' . 
+                         esc_html($category->name) . '</option>';
                 }
                 ?>
             </select>
@@ -237,14 +260,7 @@ class PFT_Post_Editor {
         $post = $posts[0];
         $data = get_post_meta($post->ID, "_pft_{$type}_data", true);
         
-        $total = 0;
-        if (is_array($data)) {
-            foreach ($data as $entry) {
-                $total += floatval($entry['amount']);
-            }
-        }
-        
-        return $total;
+        return array_sum(array_column($data, 'amount'));
     }
 
     public function save_finance_meta($post_id) {
@@ -283,5 +299,62 @@ class PFT_Post_Editor {
             }
         }
         return $sanitized;
+    }
+
+    public function get_filtered_data() {
+        check_ajax_referer('pft_editor_nonce', 'nonce');
+
+        $category = isset($_POST['category']) ? sanitize_text_field($_POST['category']) : 'all';
+        $month = isset($_POST['month']) ? sanitize_text_field($_POST['month']) : date('Y-m');
+
+        $args = array(
+            'post_type' => 'pft_monthly_finance',
+            'posts_per_page' => 1,
+            'meta_query' => array(
+                array(
+                    'key' => '_pft_month',
+                    'value' => $month
+                )
+            )
+        );
+
+        $posts = get_posts($args);
+
+        if (empty($posts)) {
+            wp_send_json_error('No data found for the selected month.');
+            return;
+        }
+
+        $post = $posts[0];
+        $income_data = get_post_meta($post->ID, '_pft_income_data', true) ?: array();
+        $expense_data = get_post_meta($post->ID, '_pft_expense_data', true) ?: array();
+
+        $filtered_data = array();
+
+        if ($category === 'all' || $category === 'income') {
+            foreach ($income_data as $entry) {
+                $term = get_term($entry['type'], 'pft_income_category');
+                $filtered_data[] = array(
+                    'category' => $term->name,
+                    'description' => $entry['description'],
+                    'amount' => $entry['amount'],
+                    'type' => 'Income'
+                );
+            }
+        }
+
+        if ($category === 'all' || $category === 'expense') {
+            foreach ($expense_data as $entry) {
+                $term = get_term($entry['type'], 'pft_expense_category');
+                $filtered_data[] = array(
+                    'category' => $term->name,
+                    'description' => $entry['description'],
+                    'amount' => $entry['amount'],
+                    'type' => 'Expense'
+                );
+            }
+        }
+
+        wp_send_json_success($filtered_data);
     }
 }
