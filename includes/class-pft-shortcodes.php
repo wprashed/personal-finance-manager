@@ -37,9 +37,9 @@ class PFT_Shortcodes {
      */
     public function render_finance_tracker($atts) {
         $atts = shortcode_atts(array(
-            'months' => 6, // Number of months to display
+            'months' => 6,
             'show_categories' => 'yes',
-            'chart_type' => 'bar' // 'bar' or 'line'
+            'chart_type' => 'bar'
         ), $atts, 'personal_finance_tracker');
 
         ob_start();
