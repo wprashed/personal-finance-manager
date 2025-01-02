@@ -123,4 +123,3 @@ class PFT_Post_Types {
         register_taxonomy( 'pft_expense_Type', array( 'pft_monthly_finance' ), $expense_args );
     }
 }
-
