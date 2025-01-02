@@ -1,5 +1,5 @@
 === Personal Finance Tracker ===
-Contributors: yourname
+Contributors: wprashed
 Tags: finance, money, budget, expense tracker, income tracker, financial management
 Requires at least: 5.8
 Tested up to: 6.4
@@ -152,5 +152,3 @@ Developers can extend the plugin's functionality using these hooks:
 * `pft_expense_categories` - Modify expense categories
 * `pft_chart_colors` - Customize chart colors
 * `pft_currency_format` - Customize currency format
-
-For detailed documentation on hooks and filters, visit our developer documentation.
