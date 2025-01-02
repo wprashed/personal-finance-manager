@@ -218,63 +218,141 @@
     height: 400px;
 }
 
+/* Filter Section Styles */
 .pft-filter-section {
-    padding: 24px;
-    background: #f9fafb;
-    border-top: 1px solid #e5e7eb;
+    padding: 2rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.pft-filter-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 1.5rem 0;
 }
 
 .pft-filter-form {
     display: flex;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 1rem;
     align-items: flex-end;
 }
 
-.pft-filter-form label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #374151;
-    margin-bottom: 6px;
-    display: block;
+.pft-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.pft-filter-form select,
-.pft-filter-form input[type="month"] {
-    padding: 10px 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
+.pft-filter-group label {
     font-size: 0.875rem;
-    color: #374151;
-    background: white;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+.pft-select,
+.pft-input {
+    min-width: 200px;
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background-color: white;
+    color: #1e293b;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
     transition: all 0.2s ease;
 }
 
-.pft-filter-form select:hover,
-.pft-filter-form input[type="month"]:hover {
-    border-color: #9ca3af;
+.pft-select {
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
-.pft-filter-form select:focus,
-.pft-filter-form input[type="month"]:focus {
-    border-color: #6366f1;
+.pft-select:focus,
+.pft-input:focus {
     outline: none;
+    border-color: #6366f1;
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .pft-filter-button {
-    padding: 10px 18px;
-    background: #6366f1;
+    padding: 0.5rem 1rem;
+    background-color: #6366f1;
     color: white;
     border: none;
     border-radius: 6px;
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease;
 }
 
 .pft-filter-button:hover {
-    background: #4f46e5;
+    background-color: #4f46e5;
+}
+
+.pft-filter-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+}
+
+/* Filtered Results Table */
+.pft-filtered-data {
+    margin-top: 1.5rem;
+}
+
+.pft-filtered-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pft-filtered-table th,
+.pft-filtered-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.pft-filtered-table th {
+    background: #f8fafc;
+    font-weight: 500;
+    color: #4b5563;
+    font-size: 0.875rem;
+}
+
+.pft-filtered-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .pft-filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pft-select,
+    .pft-input {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .pft-filter-button {
+        width: 100%;
+    }
 }
 
 @media (max-width: 782px) {
@@ -290,119 +368,4 @@
         flex-direction: column;
         align-items: stretch;
     }
-}
-
-/* Filter Section Styles */
-.pft-filter-section {
-    background-color: #f3f4f6;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.pft-filter-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-items: flex-end;
-}
-
-.pft-filter-form > div {
-    flex: 1;
-    min-width: 200px;
-}
-
-.pft-filter-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-    color: #374151;
-}
-
-.pft-filter-form select,
-.pft-filter-form input[type="month"] {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 14px;
-    color: #374151;
-    background-color: #fff;
-    transition: border-color 0.2s ease-in-out;
-}
-
-.pft-filter-form select:focus,
-.pft-filter-form input[type="month"]:focus {
-    outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
-
-.pft-filter-button {
-    padding: 8px 16px;
-    background-color: #6366f1;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-}
-
-.pft-filter-button:hover {
-    background-color: #4f46e5;
-}
-
-/* Filtered Data Table Styles */
-.pft-filtered-data {
-    margin-top: 20px;
-}
-
-.pft-filtered-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background-color: #ffffff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-}
-
-.pft-filtered-table th,
-.pft-filtered-table td {
-    padding: 12px 16px;
-    text-align: left;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.pft-filtered-table th {
-    background-color: #f9fafb;
-    font-weight: 600;
-    color: #374151;
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 0.05em;
-}
-
-.pft-filtered-table tr:last-child td {
-    border-bottom: none;
-}
-
-.pft-filtered-table tr:nth-child(even) {
-    background-color: #f9fafb;
-}
-
-@media (max-width: 768px) {
-    .pft-filter-form {
-        flex-direction: column;
-    }
-
-    .pft-filter-form > div {
-        width: 100%;
-    }
-}
-
-.pft-entry, #pft_monthly_finance_meta{
-    display: none;
 }
