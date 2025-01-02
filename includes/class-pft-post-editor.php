@@ -200,10 +200,12 @@ class PFT_Post_Editor {
                     'taxonomy' => $category_taxonomy,
                     'hide_empty' => false
                 ));
-                foreach ($categories as $category) {
-                    $selected = selected($entry['type'], $category->term_id, false);
-                    echo '<option value="' . esc_attr($category->term_id) . '" ' . $selected . '>' . 
-                         esc_html($category->name) . '</option>';
+                if (!is_wp_error($categories) && !empty($categories)) {
+                    foreach ($categories as $category) {
+                        $selected = selected($entry['type'], $category->term_id, false);
+                        echo '<option value="' . esc_attr($category->term_id) . '" ' . $selected . '>' . 
+                             esc_html($category->name) . '</option>';
+                    }
                 }
                 ?>
             </select>
