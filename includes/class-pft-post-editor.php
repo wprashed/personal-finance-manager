@@ -94,8 +94,8 @@ class PFT_Post_Editor {
                 <h2 class="pft-filter-title">Filter Report</h2>
                 <form id="pft-filter-form" class="pft-filter-form">
                     <div class="pft-filter-group">
-                        <label for="pft-filter-category">Category</label>
-                        <select id="pft-filter-category" name="category" class="pft-select">
+                        <label for="pft-filter-Type">Type</label>
+                        <select id="pft-filter-Type" name="Type" class="pft-select">
                             <option value="all">All Types</option>
                             <option value="income">Income</option>
                             <option value="expense">Expense</option>
@@ -172,11 +172,11 @@ class PFT_Post_Editor {
         <script type="text/template" id="pft-transaction-types-template">
             <?php
             $income_types = get_terms(array(
-                'taxonomy' => 'pft_income_category',
+                'taxonomy' => 'pft_income_Type',
                 'hide_empty' => false
             ));
             $expense_types = get_terms(array(
-                'taxonomy' => 'pft_expense_category',
+                'taxonomy' => 'pft_expense_Type',
                 'hide_empty' => false
             ));
             ?>
@@ -196,21 +196,21 @@ class PFT_Post_Editor {
 
     private function render_transaction_row($type, $index, $entry = null) {
         $entry = $entry ?: array('type' => '', 'description' => '', 'amount' => '');
-        $category_taxonomy = $type === 'income' ? 'pft_income_category' : 'pft_expense_category';
+        $Type_taxonomy = $type === 'income' ? 'pft_income_Type' : 'pft_expense_Type';
         ?>
         <div class="pft-transaction-row">
             <select name="pft_<?php echo $type; ?>[<?php echo $index; ?>][type]" required>
-                <option value="">Select Category</option>
+                <option value="">Select Type</option>
                 <?php
                 $Types = get_terms(array(
-                    'taxonomy' => $category_taxonomy,
+                    'taxonomy' => $Type_taxonomy,
                     'hide_empty' => false
                 ));
                 if (!is_wp_error($Types) && !empty($Types)) {
-                    foreach ($Types as $category) {
-                        $selected = selected($entry['type'], $category->term_id, false);
-                        echo '<option value="' . esc_attr($category->term_id) . '" ' . $selected . '>' . 
-                             esc_html($category->name) . '</option>';
+                    foreach ($Types as $Type) {
+                        $selected = selected($entry['type'], $Type->term_id, false);
+                        echo '<option value="' . esc_attr($Type->term_id) . '" ' . $selected . '>' . 
+                             esc_html($Type->name) . '</option>';
                     }
                 }
                 ?>
@@ -312,7 +312,7 @@ class PFT_Post_Editor {
     public function get_filtered_data() {
         check_ajax_referer('pft_editor_nonce', 'nonce');
 
-        $category = isset($_POST['category']) ? sanitize_text_field($_POST['category']) : 'all';
+        $Type = isset($_POST['Type']) ? sanitize_text_field($_POST['Type']) : 'all';
         $month = isset($_POST['month']) ? sanitize_text_field($_POST['month']) : date('Y-m');
 
         $args = array(
@@ -339,11 +339,11 @@ class PFT_Post_Editor {
 
         $filtered_data = array();
 
-        if ($category === 'all' || $category === 'income') {
+        if ($Type === 'all' || $Type === 'income') {
             foreach ($income_data as $entry) {
-                $term = get_term($entry['type'], 'pft_income_category');
+                $term = get_term($entry['type'], 'pft_income_Type');
                 $filtered_data[] = array(
-                    'category' => $term->name,
+                    'Type' => $term->name,
                     'description' => $entry['description'],
                     'amount' => $entry['amount'],
                     'type' => 'Income'
@@ -351,11 +351,11 @@ class PFT_Post_Editor {
             }
         }
 
-        if ($category === 'all' || $category === 'expense') {
+        if ($Type === 'all' || $Type === 'expense') {
             foreach ($expense_data as $entry) {
-                $term = get_term($entry['type'], 'pft_expense_category');
+                $term = get_term($entry['type'], 'pft_expense_Type');
                 $filtered_data[] = array(
-                    'category' => $term->name,
+                    'Type' => $term->name,
                     'description' => $entry['description'],
                     'amount' => $entry['amount'],
                     'type' => 'Expense'
