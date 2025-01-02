@@ -1,122 +1,106 @@
 <?php
-class PFT_Ajax_Handlers {
+/**
+ * AJAX Handler for Personal Finance Tracker
+ *
+ * @package PersonalFinanceTracker
+ */
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
+class PFT_Ajax_Handler {
     public function __construct() {
-        add_action('wp_ajax_pft_get_monthly_data', array($this, 'get_monthly_data'));
-        add_action('wp_ajax_pft_get_monthly_details', array($this, 'get_monthly_details'));
-
-        // For non-logged in users
-        add_action('wp_ajax_nopriv_pft_get_monthly_data', array($this, 'get_monthly_data'));
-        add_action('wp_ajax_nopriv_pft_get_monthly_details', array($this, 'get_monthly_details'));
+        add_action('wp_ajax_pft_get_categories', array($this, 'get_categories'));
+        add_action('wp_ajax_pft_add_category', array($this, 'add_category'));
+        add_action('wp_ajax_pft_updatecategory', array($this, 'update_category'));
+        add_action('wp_ajax_pft_delete_category', array($this, 'delete_category'));
     }
 
-    public function get_monthly_data() {
-        if (!wp_verify_nonce($_POST['nonce'], 'pft_ajax_nonce')) {
-            wp_send_json_error(array('message' => 'Invalid nonce'));
-        }
+    public function get_categories() {
+        check_ajax_referer('pft_admin_nonce', 'nonce');
 
-        $args = array(
-            'post_type' => 'pft_monthly_finance',
-            'posts_per_page' => 6,
-            'orderby' => 'date',
-            'order' => 'DESC',
-        );
+        $categories = get_terms(array(
+            'taxonomy' => array('pft_income_category', 'pft_expense_category'),
+            'hide_empty' => false,
+        ));
 
-        $posts = get_posts($args);
-        $data = array(
-            'labels' => array(),
-            'income' => array(),
-            'expenses' => array()
-        );
-
-        foreach ($posts as $post) {
-            $data['labels'][] = get_the_date('M Y', $post->ID);
-            
-            $income_data = get_post_meta($post->ID, '_pft_income_data', true);
-            $expense_data = get_post_meta($post->ID, '_pft_expense_data', true);
-
-            $total_income = 0;
-            $total_expenses = 0;
-
-            if (is_array($income_data)) {
-                foreach ($income_data as $entry) {
-                    $total_income += floatval($entry['amount']);
-                }
-            }
-
-            if (is_array($expense_data)) {
-                foreach ($expense_data as $entry) {
-                    $total_expenses += floatval($entry['amount']);
-                }
-            }
-
-            $data['income'][] = $total_income;
-            $data['expenses'][] = $total_expenses;
-        }
-
-        $data['labels'] = array_reverse($data['labels']);
-        $data['income'] = array_reverse($data['income']);
-        $data['expenses'] = array_reverse($data['expenses']);
-
-        wp_send_json_success($data);
+        wp_send_json_success($categories);
     }
 
-    public function get_monthly_details() {
-        if (!wp_verify_nonce($_POST['nonce'], 'pft_ajax_nonce')) {
-            wp_send_json_error(array('message' => 'Invalid nonce'));
+    public function add_category() {
+        check_ajax_referer('pft_admin_nonce', 'nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error('Insufficient permissions');
         }
 
-        $args = array(
-            'post_type' => 'pft_monthly_finance',
-            'posts_per_page' => 1,
-            'orderby' => 'date',
-            'order' => 'DESC',
-        );
+        $name = sanitize_text_field($_POST['name']);
+        $type = sanitize_text_field($_POST['type']);
 
-        $posts = get_posts($args);
-
-        if (empty($posts)) {
-            wp_send_json_error(array('message' => 'No monthly data found'));
+        if (empty($name) || empty($type)) {
+            wp_send_json_error('Name and type are required');
         }
 
-        $post = $posts[0];
-        $income_data = get_post_meta($post->ID, '_pft_income_data', true);
-        $expense_data = get_post_meta($post->ID, '_pft_expense_data', true);
+        $taxonomy = $type === 'income' ? 'pft_income_category' : 'pft_expense_category';
 
-        ob_start();
-        ?>
-        <h4><?php echo get_the_date('F Y', $post->ID); ?></h4>
-        <div class="pft-monthly-income">
-            <h5>Income</h5>
-            <ul>
-                <?php
-                if (is_array($income_data)) {
-                    foreach ($income_data as $entry) {
-                        $type = get_term($entry['type'], 'pft_transaction_type');
-                        echo '<li>' . esc_html($type->name) . ': ' . esc_html($entry['description']) . ' - $' . number_format($entry['amount'], 2) . '</li>';
-                    }
-                } else {
-                    echo '<li>No income entries for this month.</li>';
-                }
-                ?>
-            </ul>
-        </div>
-        <div class="pft-monthly-expenses">
-            <h5>Expenses</h5>
-            <ul>
-                <?php
-                if (is_array($expense_data)) {
-                    foreach ($expense_data as $entry) {
-                        $type = get_term($entry['type'], 'pft_transaction_type');
-                        echo '<li>' . esc_html($type->name) . ': ' . esc_html($entry['description']) . ' - $' . number_format($entry['amount'], 2) . '</li>';
-                    }
-                } else {
-                    echo '<li>No expense entries for this month.</li>';
-                }
-                ?>
-            </ul>
-        </div>
-        <?php
-        $html = ob_get_clean();
-        wp_send_json_success($html);
+        $result = wp_insert_term($name, $taxonomy);
+
+        if (is_wp_error($result)) {
+            wp_send_json_error($result->get_error_message());
+        } else {
+            wp_send_json_success(array('id' => $result['term_id'], 'name' => $name));
+        }
+    }
+
+    public function update_category() {
+        check_ajax_referer('pft_admin_nonce', 'nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error('Insufficient permissions');
+        }
+
+        $id = intval($_POST['id']);
+        $name = sanitize_text_field($_POST['name']);
+        $type = sanitize_text_field($_POST['type']);
+
+        if (empty($id) || empty($name) || empty($type)) {
+            wp_send_json_error('ID, name, and type are required');
+        }
+
+        $taxonomy = $type === 'income' ? 'pft_income_category' : 'pft_expense_category';
+
+        $result = wp_update_term($id, $taxonomy, array('name' => $name));
+
+        if (is_wp_error($result)) {
+            wp_send_json_error($result->get_error_message());
+        } else {
+            wp_send_json_success(array('id' => $id, 'name' => $name));
+        }
+    }
+
+    public function delete_category() {
+        check_ajax_referer('pft_admin_nonce', 'nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error('Insufficient permissions');
+        }
+
+        $id = intval($_POST['id']);
+        $type = sanitize_text_field($_POST['type']);
+
+        if (empty($id) || empty($type)) {
+            wp_send_json_error('ID and type are required');
+        }
+
+        $taxonomy = $type === 'income' ? 'pft_income_category' : 'pft_expense_category';
+
+        $result = wp_delete_term($id, $taxonomy);
+
+        if (is_wp_error($result)) {
+            wp_send_json_error($result->get_error_message());
+        } else {
+            wp_send_json_success(array('id' => $id));
+        }
     }
 }
