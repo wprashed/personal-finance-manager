@@ -163,12 +163,12 @@
 .pft-add-button {
     display: inline-flex;
     align-items: center;
-    padding: 10px 18px;
+    padding: 8px 18px;
     background: #6366f1;
     color: white;
     border: none;
     border-radius: 6px;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
