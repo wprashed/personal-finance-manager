@@ -1,106 +1,121 @@
-<?php
-/**
- * AJAX Handler for Personal Finance Tracker
- *
- * @package PersonalFinanceTracker
- */
+jQuery(document).ready(function($) {
+    if ($('#pft-finance-tracker').length) {
+        var ctx = document.getElementById('pft-finance-chart').getContext('2d');
+        var financeChart;
 
-if (!defined('ABSPATH')) {
-    exit; // Exit if accessed directly
-}
+        function initChart(data) {
+            financeChart = new Chart(ctx, {
+                type: $('#pft-finance-tracker').data('chart-type') || 'bar',
+                data: {
+                    labels: data.map(item => item.date),
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: data.map(item => item.income),
+                            backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                            borderColor: 'rgb(16, 185, 129)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Expenses',
+                            data: data.map(item => item.expenses),
+                            backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                            borderColor: 'rgb(239, 68, 68)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Savings',
+                            data: data.map(item => item.savings),
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: 'rgb(59, 130, 246)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.raw.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
 
-class PFT_Ajax_Handler {
-    public function __construct() {
-        add_action('wp_ajax_pft_get_categories', array($this, 'get_categories'));
-        add_action('wp_ajax_pft_add_category', array($this, 'add_category'));
-        add_action('wp_ajax_pft_updatecategory', array($this, 'update_category'));
-        add_action('wp_ajax_pft_delete_category', array($this, 'delete_category'));
+        function updateFinancialData() {
+            $.ajax({
+                url: pftAjax.ajaxurl,
+                type: 'GET',
+                data: {
+                    action: 'pft_get_financial_data',
+                    nonce: pftAjax.nonce,
+                    months: $('#pft-finance-tracker').data('months') || 6
+                },
+                success: function(response) {
+                    if (response.success) {
+                        updateChart(response.data);
+                        updateSummary(response.data);
+                        updateMonthlyDetails(response.data);
+                    } else {
+                        console.error('Error fetching financial data:', response.data);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX error:', error);
+                }
+            });
+        }
+
+        function updateChart(data) {
+            if (financeChart) {
+                financeChart.destroy();
+            }
+            initChart(data);
+        }
+
+        function updateSummary(data) {
+            var totalIncome = data.reduce((sum, item) => sum + item.income, 0);
+            var totalExpenses = data.reduce((sum, item) => sum + item.expenses, 0);
+            var totalSavings = totalIncome - totalExpenses;
+
+            $('#pft-total-income').text('$' + totalIncome.toLocaleString());
+            $('#pft-total-expenses').text('$' + totalExpenses.toLocaleString());
+            $('#pft-balance').text('$' + totalSavings.toLocaleString());
+        }
+
+        function updateMonthlyDetails(data) {
+            var detailsHtml = '<table class="pft-monthly-details-table">';
+            detailsHtml += '<thead><tr><th>Date</th><th>Income</th><th>Expenses</th><th>Savings</th></tr></thead><tbody>';
+
+            data.forEach(function(item) {
+                detailsHtml += `<tr>
+                    <td>${item.date}</td>
+                    <td>$${item.income.toLocaleString()}</td>
+                    <td>$${item.expenses.toLocaleString()}</td>
+                    <td>$${item.savings.toLocaleString()}</td>
+                </tr>`;
+            });
+
+            detailsHtml += '</tbody></table>';
+            $('#pft-monthly-details-content').html(detailsHtml);
+        }
+
+        updateFinancialData();
     }
-
-    public function get_categories() {
-        check_ajax_referer('pft_admin_nonce', 'nonce');
-
-        $categories = get_terms(array(
-            'taxonomy' => array('pft_income_category', 'pft_expense_category'),
-            'hide_empty' => false,
-        ));
-
-        wp_send_json_success($categories);
-    }
-
-    public function add_category() {
-        check_ajax_referer('pft_admin_nonce', 'nonce');
-
-        if (!current_user_can('manage_options')) {
-            wp_send_json_error('Insufficient permissions');
-        }
-
-        $name = sanitize_text_field($_POST['name']);
-        $type = sanitize_text_field($_POST['type']);
-
-        if (empty($name) || empty($type)) {
-            wp_send_json_error('Name and type are required');
-        }
-
-        $taxonomy = $type === 'income' ? 'pft_income_category' : 'pft_expense_category';
-
-        $result = wp_insert_term($name, $taxonomy);
-
-        if (is_wp_error($result)) {
-            wp_send_json_error($result->get_error_message());
-        } else {
-            wp_send_json_success(array('id' => $result['term_id'], 'name' => $name));
-        }
-    }
-
-    public function update_category() {
-        check_ajax_referer('pft_admin_nonce', 'nonce');
-
-        if (!current_user_can('manage_options')) {
-            wp_send_json_error('Insufficient permissions');
-        }
-
-        $id = intval($_POST['id']);
-        $name = sanitize_text_field($_POST['name']);
-        $type = sanitize_text_field($_POST['type']);
-
-        if (empty($id) || empty($name) || empty($type)) {
-            wp_send_json_error('ID, name, and type are required');
-        }
-
-        $taxonomy = $type === 'income' ? 'pft_income_category' : 'pft_expense_category';
-
-        $result = wp_update_term($id, $taxonomy, array('name' => $name));
-
-        if (is_wp_error($result)) {
-            wp_send_json_error($result->get_error_message());
-        } else {
-            wp_send_json_success(array('id' => $id, 'name' => $name));
-        }
-    }
-
-    public function delete_category() {
-        check_ajax_referer('pft_admin_nonce', 'nonce');
-
-        if (!current_user_can('manage_options')) {
-            wp_send_json_error('Insufficient permissions');
-        }
-
-        $id = intval($_POST['id']);
-        $type = sanitize_text_field($_POST['type']);
-
-        if (empty($id) || empty($type)) {
-            wp_send_json_error('ID and type are required');
-        }
-
-        $taxonomy = $type === 'income' ? 'pft_income_category' : 'pft_expense_category';
-
-        $result = wp_delete_term($id, $taxonomy);
-
-        if (is_wp_error($result)) {
-            wp_send_json_error($result->get_error_message());
-        } else {
-            wp_send_json_success(array('id' => $id));
-        }
-    }
-}
+});
