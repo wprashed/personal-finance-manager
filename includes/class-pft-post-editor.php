@@ -90,31 +90,6 @@ class PFT_Post_Editor {
                 </div>
             </div>
 
-            <div class="pft-filter-section">
-                <h2 class="pft-filter-title">Filter Report</h2>
-                <form id="pft-filter-form" class="pft-filter-form">
-                    <div class="pft-filter-group">
-                        <label for="pft-filter-Type">Type</label>
-                        <select id="pft-filter-Type" name="Type" class="pft-select">
-                            <option value="all">All Types</option>
-                            <option value="income">Income</option>
-                            <option value="expense">Expense</option>
-                        </select>
-                    </div>
-                    <div class="pft-filter-group">
-                        <label for="pft-filter-month">Month</label>
-                        <input 
-                            type="month" 
-                            id="pft-filter-month" 
-                            name="month" 
-                            value="<?php echo date('Y-m'); ?>"
-                            class="pft-input"
-                        >
-                    </div>
-                    <button type="submit" class="pft-filter-button">Apply Filter</button>
-                </form>
-            </div>
-
             <div class="pft-transactions-section">
                 <h3 class="pft-section-title">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
