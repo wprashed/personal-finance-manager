@@ -89,6 +89,7 @@
 .pft-transactions-section {
     padding: 24px;
     border-top: 1px solid #e5e7eb;
+    min-height: 230px;
 }
 
 .pft-section-title {
@@ -120,7 +121,7 @@
 
 .pft-transaction-row {
     display: grid;
-    grid-template-columns: 1fr 1fr 180px 100px;
+    grid-template-columns: 1fr 1fr 200px 100px;
     gap: 16px;
     align-items: center;
     padding: 16px;
@@ -138,10 +139,10 @@
 .pft-transaction-row select,
 .pft-transaction-row input {
     width: 100%;
-    padding: 10px 14px;
+    padding: 04px 14px;
     border: 1px solid #d1d5db;
     border-radius: 6px;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     color: #374151;
     background: white;
     transition: all 0.2s ease;
@@ -162,7 +163,6 @@
 .pft-add-button {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
     padding: 10px 18px;
     background: #6366f1;
     color: white;
@@ -172,6 +172,9 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+    float: right;
+    margin-top: 40px;
+    margin-right: -23px;
 }
 
 .pft-add-button:hover {
