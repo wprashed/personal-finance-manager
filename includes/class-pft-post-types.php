@@ -70,18 +70,18 @@ class PFT_Post_Types {
      * Register custom taxonomies
      */
     public function register_taxonomies() {
-        // Income Category Taxonomy
+        // Income Type Taxonomy
         $income_labels = array(
             'name'              => _x( 'Income Types', 'taxonomy general name', 'personal-finance-tracker' ),
-            'singular_name'     => _x( 'Income Category', 'taxonomy singular name', 'personal-finance-tracker' ),
+            'singular_name'     => _x( 'Income Type', 'taxonomy singular name', 'personal-finance-tracker' ),
             'search_items'      => __( 'Search Income Types', 'personal-finance-tracker' ),
             'all_items'         => __( 'All Income Types', 'personal-finance-tracker' ),
-            'parent_item'       => __( 'Parent Income Category', 'personal-finance-tracker' ),
-            'parent_item_colon' => __( 'Parent Income Category:', 'personal-finance-tracker' ),
-            'edit_item'         => __( 'Edit Income Category', 'personal-finance-tracker' ),
-            'update_item'       => __( 'Update Income Category', 'personal-finance-tracker' ),
-            'add_new_item'      => __( 'Add New Income Category', 'personal-finance-tracker' ),
-            'new_item_name'     => __( 'New Income Category Name', 'personal-finance-tracker' ),
+            'parent_item'       => __( 'Parent Income Type', 'personal-finance-tracker' ),
+            'parent_item_colon' => __( 'Parent Income Type:', 'personal-finance-tracker' ),
+            'edit_item'         => __( 'Edit Income Type', 'personal-finance-tracker' ),
+            'update_item'       => __( 'Update Income Type', 'personal-finance-tracker' ),
+            'add_new_item'      => __( 'Add New Income Type', 'personal-finance-tracker' ),
+            'new_item_name'     => __( 'New Income Type Name', 'personal-finance-tracker' ),
             'menu_name'         => __( 'Income Types', 'personal-finance-tracker' ),
         );
 
@@ -91,23 +91,23 @@ class PFT_Post_Types {
             'show_ui'           => true,
             'show_admin_column' => true,
             'query_var'         => true,
-            'rewrite'           => array( 'slug' => 'income-category' ),
+            'rewrite'           => array( 'slug' => 'income-Type' ),
         );
 
-        register_taxonomy( 'pft_income_category', array( 'pft_monthly_finance' ), $income_args );
+        register_taxonomy( 'pft_income_Type', array( 'pft_monthly_finance' ), $income_args );
 
-        // Expense Category Taxonomy
+        // Expense Type Taxonomy
         $expense_labels = array(
             'name'              => _x( 'Expense Types', 'taxonomy general name', 'personal-finance-tracker' ),
-            'singular_name'     => _x( 'Expense Category', 'taxonomy singular name', 'personal-finance-tracker' ),
+            'singular_name'     => _x( 'Expense Type', 'taxonomy singular name', 'personal-finance-tracker' ),
             'search_items'      => __( 'Search Expense Types', 'personal-finance-tracker' ),
             'all_items'         => __( 'All Expense Types', 'personal-finance-tracker' ),
-            'parent_item'       => __( 'Parent Expense Category', 'personal-finance-tracker' ),
-            'parent_item_colon' => __( 'Parent Expense Category:', 'personal-finance-tracker' ),
-            'edit_item'         => __( 'Edit Expense Category', 'personal-finance-tracker' ),
-            'update_item'       => __( 'Update Expense Category', 'personal-finance-tracker' ),
-            'add_new_item'      => __( 'Add New Expense Category', 'personal-finance-tracker' ),
-            'new_item_name'     => __( 'New Expense Category Name', 'personal-finance-tracker' ),
+            'parent_item'       => __( 'Parent Expense Type', 'personal-finance-tracker' ),
+            'parent_item_colon' => __( 'Parent Expense Type:', 'personal-finance-tracker' ),
+            'edit_item'         => __( 'Edit Expense Type', 'personal-finance-tracker' ),
+            'update_item'       => __( 'Update Expense Type', 'personal-finance-tracker' ),
+            'add_new_item'      => __( 'Add New Expense Type', 'personal-finance-tracker' ),
+            'new_item_name'     => __( 'New Expense Type Name', 'personal-finance-tracker' ),
             'menu_name'         => __( 'Expense Types', 'personal-finance-tracker' ),
         );
 
@@ -117,10 +117,10 @@ class PFT_Post_Types {
             'show_ui'           => true,
             'show_admin_column' => true,
             'query_var'         => true,
-            'rewrite'           => array( 'slug' => 'expense-category' ),
+            'rewrite'           => array( 'slug' => 'expense-Type' ),
         );
 
-        register_taxonomy( 'pft_expense_category', array( 'pft_monthly_finance' ), $expense_args );
+        register_taxonomy( 'pft_expense_Type', array( 'pft_monthly_finance' ), $expense_args );
     }
 }
 
