@@ -120,4 +120,3 @@ class PFT_Ajax_Handlers {
         wp_send_json_success($html);
     }
 }
-
