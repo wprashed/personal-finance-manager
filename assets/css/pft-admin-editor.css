@@ -3,80 +3,75 @@
     margin: 20px 0;
     background: #fff;
     border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
 .pft-editor-header {
-    padding: 20px;
-    border-bottom: 1px solid #e5e7eb;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f8fafc;
-    border-radius: 12px 12px 0 0;
+    padding: 24px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
 }
 
 .pft-editor-header h2 {
     margin: 0;
-    font-size: 1.5rem;
-    color: #1e293b;
+    font-size: 1.8rem;
+    font-weight: 600;
 }
 
 .pft-summary-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    padding: 20px;
-    background: #fff;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 24px;
+    background: #f9fafb;
 }
 
 .pft-summary-card {
-    padding: 20px;
-    border-radius: 8px;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
-    transition: all 0.2s ease;
+    padding: 24px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
 }
 
 .pft-summary-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .pft-summary-card h3 {
-    margin: 0 0 8px 0;
-    font-size: 0.875rem;
-    color: #64748b;
+    margin: 0 0 12px 0;
+    font-size: 1rem;
+    color: #6b7280;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .pft-summary-card .amount {
-    font-size: 1.875rem;
-    font-weight: 600;
-    color: #0f172a;
-    margin-bottom: 8px;
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
 }
 
 .pft-summary-card .trend {
     font-size: 0.875rem;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 }
 
 .pft-summary-card.income {
-    background: #f0fdf4;
-    border-color: #bbf7d0;
+    background: linear-gradient(135deg, #d1fae5, #ecfdf5);
 }
 
 .pft-summary-card.income .amount {
-    color: #15803d;
+    color: #047857;
 }
 
 .pft-summary-card.expense {
-    background: #fef2f2;
-    border-color: #fecaca;
+    background: linear-gradient(135deg, #fee2e2, #fef2f2);
 }
 
 .pft-summary-card.expense .amount {
@@ -84,8 +79,7 @@
 }
 
 .pft-summary-card.balance {
-    background: #f0f9ff;
-    border-color: #bae6fd;
+    background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
 }
 
 .pft-summary-card.balance .amount {
@@ -93,84 +87,84 @@
 }
 
 .pft-transactions-section {
-    padding: 20px;
+    padding: 24px;
     border-top: 1px solid #e5e7eb;
 }
 
 .pft-section-title {
     margin: 0 0 20px 0;
-    font-size: 1.25rem;
-    color: #1e293b;
+    font-size: 1.5rem;
+    color: #111827;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 .pft-section-title svg {
-    width: 20px;
-    height: 20px;
-    color: #64748b;
+    width: 24px;
+    height: 24px;
+    color: #6b7280;
 }
 
 .pft-transaction-form {
-    background: #f8fafc;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
 }
 
 .pft-transaction-grid {
     display: grid;
-    gap: 16px;
+    gap: 20px;
 }
 
 .pft-transaction-row {
     display: grid;
-    grid-template-columns: 180px 1fr 180px 100px;
-    gap: 12px;
+    grid-template-columns: 1fr 1fr 180px 100px;
+    gap: 16px;
     align-items: center;
-    padding: 12px;
+    padding: 16px;
     background: white;
     border: 1px solid #e5e7eb;
-    border-radius: 6px;
+    border-radius: 8px;
     transition: all 0.2s ease;
 }
 
 .pft-transaction-row:hover {
-    border-color: #94a3b8;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-color: #6366f1;
+    box-shadow: 0 2px 4px rgba(99, 102, 241, 0.1);
 }
 
 .pft-transaction-row select,
 .pft-transaction-row input {
     width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #e5e7eb;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
     border-radius: 6px;
     font-size: 0.875rem;
-    color: #1e293b;
+    color: #374151;
     background: white;
     transition: all 0.2s ease;
 }
 
 .pft-transaction-row select:hover,
 .pft-transaction-row input:hover {
-    border-color: #94a3b8;
+    border-color: #9ca3af;
 }
 
 .pft-transaction-row select:focus,
 .pft-transaction-row input:focus {
-    border-color: #3b82f6;
+    border-color: #6366f1;
     outline: none;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .pft-add-button {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 16px;
-    background: #3b82f6;
+    padding: 10px 18px;
+    background: #6366f1;
     color: white;
     border: none;
     border-radius: 6px;
@@ -181,16 +175,16 @@
 }
 
 .pft-add-button:hover {
-    background: #2563eb;
+    background: #4f46e5;
 }
 
 .pft-add-button svg {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
 }
 
 .pft-remove-button {
-    padding: 6px;
+    padding: 8px;
     background: #fee2e2;
     color: #b91c1c;
     border: none;
@@ -207,21 +201,80 @@
 }
 
 .pft-remove-button svg {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
 }
 
 .pft-chart-section {
-    padding: 20px;
+    padding: 24px;
     border-top: 1px solid #e5e7eb;
 }
 
 .pft-chart-container {
     background: white;
     border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 20px;
-    height: 300px;
+    border-radius: 12px;
+    padding: 24px;
+    height: 400px;
+}
+
+.pft-filter-section {
+    padding: 24px;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+}
+
+.pft-filter-form {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.pft-filter-form label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.pft-filter-form select,
+.pft-filter-form input[type="month"] {
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #374151;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.pft-filter-form select:hover,
+.pft-filter-form input[type="month"]:hover {
+    border-color: #9ca3af;
+}
+
+.pft-filter-form select:focus,
+.pft-filter-form input[type="month"]:focus {
+    border-color: #6366f1;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.pft-filter-button {
+    padding: 10px 18px;
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pft-filter-button:hover {
+    background: #4f46e5;
 }
 
 @media (max-width: 782px) {
@@ -232,7 +285,13 @@
     .pft-summary-cards {
         grid-template-columns: 1fr;
     }
+
+    .pft-filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
+
 .pft-entry, #pft_monthly_finance_meta{
     display: none;
 }
