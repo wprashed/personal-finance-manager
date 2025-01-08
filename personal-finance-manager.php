@@ -18,7 +18,6 @@ define('PFT_PLUGIN_URL', plugin_dir_url(__FILE__));
 // Include necessary files
 require_once PFT_PLUGIN_DIR . 'includes/class-pft-post-types.php';
 require_once PFT_PLUGIN_DIR . 'includes/class-pft-shortcodes.php';
-require_once PFT_PLUGIN_DIR . 'includes/class-pft-admin.php';
 require_once PFT_PLUGIN_DIR . 'includes/class-pft-ajax-handler.php';
 require_once PFT_PLUGIN_DIR . 'includes/class-pft-admin-dashboard.php';
 require_once PFT_PLUGIN_DIR . 'includes/class-pft-post-editor.php';
@@ -27,7 +26,6 @@ require_once PFT_PLUGIN_DIR . 'includes/class-pft-post-editor.php';
 function pft_init() {
     new PFT_Post_Types();
     new PFT_Shortcodes();
-    new PFT_Admin();
     new PFT_Ajax_Handler();
     new PFT_Admin_Dashboard();
     new PFT_Post_Editor();
