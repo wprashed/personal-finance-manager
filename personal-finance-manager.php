@@ -30,6 +30,7 @@ function pft_init() {
     new PFT_Shortcodes();
     new PFT_Ajax_Handler();
     new PFT_Admin_Dashboard();
+    new PFT_Post_Editor();
     new PFT_Frontend();
 
     // Load text domain for internationalization
