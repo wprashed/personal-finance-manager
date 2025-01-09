@@ -1,4 +1,4 @@
-=== Personal Finance Tracker ===
+=== Money Metrics ===
 Contributors: wprashed
 Tags: finance, money, budget, expense tracker, income tracker, financial management
 Requires at least: 5.8
@@ -46,8 +46,8 @@ Personal Finance Tracker is a powerful WordPress plugin that helps you manage an
 
 1. Upload the plugin files to the `/wp-content/plugins/personal-finance-tracker` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Go to 'Monthly Finances' in your WordPress admin menu to start tracking your finances
-4. Set up your income and expense categories under 'Monthly Finances > Categories'
+3. Go to 'Personal Finances' in your WordPress admin menu to start tracking your finances
+4. Set up your income and expense categories under 'Personal Finances > Categories'
 
 = Minimum Requirements =
 
@@ -59,14 +59,14 @@ Personal Finance Tracker is a powerful WordPress plugin that helps you manage an
 
 = How do I add a new monthly finance entry? =
 
-1. Go to Monthly Finances in your WordPress admin menu
+1. Go to Personal Finances in your WordPress admin menu
 2. Click "Add New"
 3. Enter your income and expense entries for the month
 4. Click Publish to save your entries
 
 = Can I categorize my income and expenses? =
 
-Yes! The plugin comes with pre-defined categories for both income and expenses. You can also add your own custom categories through the Monthly Finances > Categories menu.
+Yes! The plugin comes with pre-defined categories for both income and expenses. You can also add your own custom categories through the Personal Finances > Categories menu.
 
 = How do I generate reports? =
 
