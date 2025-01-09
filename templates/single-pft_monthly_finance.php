@@ -24,15 +24,15 @@ while ( have_posts() ) :
         <div class="pft-summary-cards">
             <div class="pft-summary-card income">
                 <h3><?php esc_html_e('Total Income', 'personal-finance-tracker'); ?></h3>
-                <div class="amount">$<span id="pft-total-income"><?php echo esc_html(number_format($total_income, 2)); ?></span></div>
+                <div class="amount">$<span id="pft-total-income"><?php echo esc_html(number_format(floatval($total_income), 2)); ?></span></div>
             </div>
             <div class="pft-summary-card expense">
                 <h3><?php esc_html_e('Total Expenses', 'personal-finance-tracker'); ?></h3>
-                <div class="amount">$<span id="pft-total-expenses"><?php echo esc_html(number_format($total_expenses, 2)); ?></span></div>
+                <div class="amount">$<span id="pft-total-expenses"><?php echo esc_html(number_format(floatval($total_expenses), 2)); ?></span></div>
             </div>
             <div class="pft-summary-card balance">
                 <h3><?php esc_html_e('Balance', 'personal-finance-tracker'); ?></h3>
-                <div class="amount">$<span id="pft-balance"><?php echo esc_html(number_format($total_income - $total_expenses, 2)); ?></span></div>
+                <div class="amount">$<span id="pft-balance"><?php echo esc_html(number_format(floatval($total_income) - floatval($total_expenses), 2)); ?></span></div>
             </div>
         </div>
 
@@ -49,7 +49,7 @@ while ( have_posts() ) :
                         <div class="pft-transaction-row">
                             <div><?php echo esc_html(get_term($transaction['type'], 'pft_income_category')->name); ?></div>
                             <div><?php echo esc_html($transaction['description']); ?></div>
-                            <div>$<?php echo esc_html(number_format($transaction['amount'], 2)); ?></div>
+                            <div>$<?php echo esc_html(number_format(floatval($transaction['amount']), 2)); ?></div>
                         </div>
                         <?php
                     }
@@ -71,7 +71,7 @@ while ( have_posts() ) :
                         <div class="pft-transaction-row">
                             <div><?php echo esc_html(get_term($transaction['type'], 'pft_expense_category')->name); ?></div>
                             <div><?php echo esc_html($transaction['description']); ?></div>
-                            <div>$<?php echo esc_html(number_format($transaction['amount'], 2)); ?></div>
+                            <div>$<?php echo esc_html(number_format(floatval($transaction['amount']), 2)); ?></div>
                         </div>
                         <?php
                     }
