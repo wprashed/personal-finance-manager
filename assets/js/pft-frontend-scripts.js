@@ -1,15 +1,15 @@
 jQuery(document).ready(function($) {
     var ctx = document.getElementById('pftMonthlyChart').getContext('2d');
+    var totalIncome = parseFloat($('#pft-total-income').text().replace(/[^0-9.-]+/g,""));
+    var totalExpenses = parseFloat($('#pft-total-expenses').text().replace(/[^0-9.-]+/g,""));
+
     var monthlyChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: ['Income', 'Expenses'],
             datasets: [{
                 label: 'Amount',
-                data: [
-                    parseFloat($('#pft-total-income').text().replace('$', '').replace(',', '')),
-                    parseFloat($('#pft-total-expenses').text().replace('$', '').replace(',', ''))
-                ],
+                data: [totalIncome, totalExpenses],
                 backgroundColor: [
                     'rgba(16, 185, 129, 0.7)',
                     'rgba(239, 68, 68, 0.7)'
