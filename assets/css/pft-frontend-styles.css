@@ -1,7 +1,7 @@
 /* Frontend Styles for Personal Finance Tracker */
 .pft-single-finance-wrap {
-    max-width: 940px;
-    margin: 0 auto;
+    max-width: 1240px;
+    margin: 40px auto;
     padding: 20px;
     background: #fff;
     border-radius: 12px;
