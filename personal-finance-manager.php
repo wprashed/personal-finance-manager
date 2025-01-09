@@ -22,6 +22,7 @@ require_once PFT_PLUGIN_DIR . 'includes/class-pft-post-types.php';
 require_once PFT_PLUGIN_DIR . 'includes/class-pft-shortcodes.php';
 require_once PFT_PLUGIN_DIR . 'includes/class-pft-ajax-handler.php';
 require_once PFT_PLUGIN_DIR . 'includes/class-pft-admin-dashboard.php';
+require_once PFT_PLUGIN_DIR . 'includes/class-pft-post-editor.php';
 require_once PFT_PLUGIN_DIR . 'includes/class-pft-frontend.php';
 
 // Initialize the plugin
