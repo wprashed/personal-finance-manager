@@ -21,9 +21,9 @@ class PFT_Post_Types {
      */
     public function register_post_types() {
         $labels = array(
-            'name'                  => _x('Personal Finances', 'Post type general name', 'personal-finance-tracker'),
-            'singular_name'         => _x('Monthly Finance', 'Post type singular name', 'personal-finance-tracker'),
-            'menu_name'             => _x('Personal Finances', 'Admin Menu text', 'personal-finance-tracker'),
+            'name'                  => _x('Money Metrics', 'Post type general name', 'personal-finance-tracker'),
+            'singular_name'         => _x('Money Metrics', 'Post type singular name', 'personal-finance-tracker'),
+            'menu_name'             => _x('Money Metrics', 'Admin Menu text', 'personal-finance-tracker'),
             'name_admin_bar'        => _x('Monthly Finance', 'Add New on Toolbar', 'personal-finance-tracker'),
             'add_new'               => __('Add New', 'personal-finance-tracker'),
             'add_new_item'          => __('Add New Monthly Finance', 'personal-finance-tracker'),
