@@ -147,11 +147,11 @@ class PFT_Post_Editor {
         <script type="text/template" id="pft-transaction-types-template">
             <?php
             $income_types = get_terms(array(
-                'taxonomy' => 'pft_income_Type',
+                'taxonomy' => 'pft_income_category',
                 'hide_empty' => false
             ));
             $expense_types = get_terms(array(
-                'taxonomy' => 'pft_expense_Type',
+                'taxonomy' => 'pft_expense_category',
                 'hide_empty' => false
             ));
             ?>
@@ -171,7 +171,7 @@ class PFT_Post_Editor {
 
     private function render_transaction_row($type, $index, $entry = null) {
         $entry = $entry ?: array('type' => '', 'description' => '', 'amount' => '');
-        $Type_taxonomy = $type === 'income' ? 'pft_income_Type' : 'pft_expense_Type';
+        $Type_taxonomy = $type === 'income' ? 'pft_income_category' : 'pft_expense_category';
         ?>
         <div class="pft-transaction-row">
             <select name="pft_<?php echo $type; ?>[<?php echo $index; ?>][type]" required>
