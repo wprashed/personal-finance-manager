@@ -50,7 +50,6 @@ while ( have_posts() ) :
                         $category = get_term($entry['type'], 'pft_income_category');
                         ?>
                         <div class="pft-transaction-row">
-                            <div><?php echo esc_html($entry['date']); ?></div>
                             <div><?php echo esc_html($category->name); ?></div>
                             <div><?php echo esc_html($entry['description']); ?></div>
                             <div>$<?php echo esc_html(number_format($entry['amount'], 2)); ?></div>
@@ -76,7 +75,6 @@ while ( have_posts() ) :
                         $category = get_term($entry['type'], 'pft_expense_category');
                         ?>
                         <div class="pft-transaction-row">
-                            <div><?php echo esc_html($entry['date']); ?></div>
                             <div><?php echo esc_html($category->name); ?></div>
                             <div><?php echo esc_html($entry['description']); ?></div>
                             <div>$<?php echo esc_html(number_format($entry['amount'], 2)); ?></div>
@@ -105,3 +103,4 @@ while ( have_posts() ) :
 endwhile;
 
 get_footer();
+
