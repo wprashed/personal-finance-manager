@@ -88,7 +88,7 @@ class PFT_Post_Types {
             'update_item'       => __('Update Income Type', 'personal-finance-tracker'),
             'add_new_item'      => __('Add New Income Type', 'personal-finance-tracker'),
             'new_item_name'     => __('New Income Type Name', 'personal-finance-tracker'),
-            'menu_name'         => __('Income Categories', 'personal-finance-tracker'),
+            'menu_name'         => __('Income Types', 'personal-finance-tracker'),
         );
 
         $income_args = array(
